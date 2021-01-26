@@ -2,10 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:time_tracker/app/sign_in/sign_in_button.dart';
 import 'package:time_tracker/app/sign_in/social_sign_in_button.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+
 class SignInPage extends StatelessWidget {
+  final Function(User) onSignIn;
+  //final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
+  SignInPage({this.onSignIn});
+
+  Future<void> _anoumousSignIn() async {
+    try {
+      final authResult = await FirebaseAuth.instance.signInAnonymously();
+      onSignIn(authResult.user);
+
+      // print('${authResult.user.uid}');
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return
+
+        // FutureBuilder(
+        //   future: _initialization,
+        //   builder: (ctx, snapshot) {
+        //     if (snapshot.hasError) {
+        //       return Center(child: Text('Something went wrong'));
+        //     }
+        //     if (snapshot.connectionState == ConnectionState.done) {
+        //       return
+
+        Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         elevation: 2.0,
@@ -15,6 +44,7 @@ class SignInPage extends StatelessWidget {
       body: _buildContent(),
     );
   }
+  // return Center(child: CircularProgressIndicator());
 
   Widget _buildContent() {
     return Padding(
@@ -68,7 +98,7 @@ class SignInPage extends StatelessWidget {
             text: 'Go Anonymous',
             textColor: Colors.black,
             color: Colors.lime[300],
-            onPressed: () {},
+            onPressed: _anoumousSignIn,
           ),
         ],
       ),
