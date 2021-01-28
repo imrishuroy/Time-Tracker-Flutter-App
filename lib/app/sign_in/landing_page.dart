@@ -1,45 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:time_tracker/app/home_page.dart';
 import 'package:time_tracker/app/sign_in/sign_in_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-class LandingPage extends StatefulWidget {
-  @override
-  _LandingPageState createState() => _LandingPageState();
-}
+import 'package:time_tracker/services/auth.dart';
 
-class _LandingPageState extends State<LandingPage> {
+class LandingPage extends StatelessWidget {
+  final AuthBase auth;
+
+  const LandingPage({this.auth});
+
   //Firebase user
-  User _user;
+  // AppUser _user;
 
-  @override
-  void initState() {
-    _checkCurrentUser();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   _checkCurrentUser();
+  //   widget.auth.onAuthStateChanged.listen((user) {
+  //     print(user?.uid);
+  //   });
 
-  Future<void> _checkCurrentUser() async {
-    User user = await FirebaseAuth.instance.currentUser;
-    _updateUser(user);
-  }
+  //   super.initState();
+  // }
 
-  void _updateUser(User user) {
-    //print('${user.uid}');
-    setState(() {
-      _user = user;
-    });
-  }
+  // Future<void> _checkCurrentUser() async {
+  //   AppUser user = await widget.auth.currentUser();
+  //   _updateUser(user);
+  // }
+
+  // void _updateUser(AppUser user) {
+  //   //print('${user.uid}');
+  //   setState(() {
+  //     _user = user;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
-    if (_user == null) {
-      return SignInPage(
-        onSignIn: _updateUser,
-      );
-    } else {
-      return HomePage(
-        onSignOut: () => _updateUser(null),
-      );
-    }
+    return StreamBuilder<AppUser>(
+        stream: auth.onAuthStateChanged,
+        builder: (ctx, snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
+            AppUser user = snapshot.data;
+            if (user == null) {
+              return SignInPage(
+                auth: auth,
+              );
+            } else {
+              return HomePage(
+                auth: auth,
+              );
+            }
+          } else {
+            return Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+        });
   }
 }
