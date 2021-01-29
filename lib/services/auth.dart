@@ -100,7 +100,7 @@ class Auth implements AuthBase {
       String email, String password) async {
     final authResult = await _firebaseAuth.signInWithEmailAndPassword(
         email: email, password: password);
-    _userFromFirebase(authResult.user);
+    return _userFromFirebase(authResult.user);
   }
 
   @override
@@ -108,7 +108,7 @@ class Auth implements AuthBase {
       String email, String password) async {
     final authResult = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
-    _userFromFirebase(authResult.user);
+    return _userFromFirebase(authResult.user);
   }
 
   @override
