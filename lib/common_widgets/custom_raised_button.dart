@@ -5,6 +5,7 @@ class CustomRaisedButon extends StatelessWidget {
   final VoidCallback onPressed;
   final double borderRadius;
   final Color color;
+
   final double height;
 
   const CustomRaisedButon({
@@ -22,6 +23,7 @@ class CustomRaisedButon extends StatelessWidget {
       height: height,
       child: RaisedButton(
         color: color,
+        disabledColor: color,
         onPressed: onPressed,
         child: child,
         shape: RoundedRectangleBorder(

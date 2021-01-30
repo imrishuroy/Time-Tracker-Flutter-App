@@ -5,39 +5,55 @@ import 'package:time_tracker/app/sign_in/sign_in_button.dart';
 import 'package:time_tracker/app/sign_in/social_sign_in_button.dart';
 import 'package:time_tracker/services/auth.dart';
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
   //final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
+  @override
+  _SignInPageState createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+  bool _isLoading = false;
 
   Future<void> _anoumousSignIn(BuildContext context) async {
     final auth = Provider.of<AuthBase>(context, listen: false);
     try {
+      setState(() => _isLoading = true);
       await auth.signInAnounmously();
 
       // print('${authResult.user.uid}');
     } catch (e) {
       print(e.toString());
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
   Future<void> _signInWithGoogle(BuildContext context) async {
     final auth = Provider.of<AuthBase>(context, listen: false);
     try {
+      setState(() => _isLoading = true);
       await auth.signInWithGoogle();
 
       // print('${authResult.user.uid}');
     } catch (e) {
       print(e.toString());
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
   Future<void> _signInWithFacebook(BuildContext context) async {
     final auth = Provider.of<AuthBase>(context, listen: false);
     try {
+      setState(() => _isLoading = true);
       await auth.signInWithFacebook();
 
       // print('${authResult.user.uid}');
     } catch (e) {
       print(e.toString());
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
@@ -74,7 +90,6 @@ class SignInPage extends StatelessWidget {
       body: _buildContent(context),
     );
   }
-  // return Center(child: CircularProgressIndicator());
 
   Widget _buildContent(BuildContext context) {
     return Padding(
@@ -83,20 +98,22 @@ class SignInPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            'Sign In',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 32.0,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+          _isLoading
+              ? Center(child: CircularProgressIndicator())
+              : Text(
+                  'Sign In',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
           SizedBox(height: 48.0),
           SocialSignInButton(
             text: 'Sign in with Google',
             color: Colors.white,
             textColor: Colors.black87,
-            onPressed: () => _signInWithGoogle(context),
+            onPressed: _isLoading ? null : () => _signInWithGoogle(context),
             imageUrl: 'images/google-logo.png',
           ),
           SizedBox(height: 8.0),
@@ -104,7 +121,7 @@ class SignInPage extends StatelessWidget {
             text: 'Sign in with Facebook',
             textColor: Colors.white,
             color: Color(0xff334d92),
-            onPressed: () => _signInWithFacebook,
+            onPressed: _isLoading ? null : () => _signInWithFacebook,
             imageUrl: 'images/facebook-logo.png',
           ),
           SizedBox(height: 8.0),
@@ -112,7 +129,7 @@ class SignInPage extends StatelessWidget {
             text: 'SignIn with Email',
             textColor: Colors.white,
             color: Colors.teal[700],
-            onPressed: () => _signInWithEmail(context),
+            onPressed: _isLoading ? null : () => _signInWithEmail(context),
           ),
           SizedBox(height: 8.0),
           Text(
@@ -128,7 +145,7 @@ class SignInPage extends StatelessWidget {
             text: 'Go Anonymous',
             textColor: Colors.black,
             color: Colors.lime[300],
-            onPressed: () => _anoumousSignIn(context),
+            onPressed: _isLoading ? null : () => _anoumousSignIn(context),
           ),
         ],
       ),
