@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:time_tracker/app/sign_in/landing_page.dart';
+
 import 'package:time_tracker/services/auth.dart';
 
 import 'package:provider/provider.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: LandingPage(),
+        routes: {},
       ),
     );
   }
