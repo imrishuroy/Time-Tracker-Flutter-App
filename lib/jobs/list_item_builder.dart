@@ -30,5 +30,13 @@ class ListItemBuilder extends StatelessWidget {
     );
   }
 
-  Widget _buildList(List<dynamic> items) {}
+  Widget _buildList(List<dynamic> items) {
+    return ListView.builder(
+      itemCount: items.length,
+      itemBuilder: (context, index) => itemBuilder(
+        context,
+        items[index],
+      ),
+    );
+  }
 }

@@ -9,6 +9,7 @@ abstract class DataBase {
   //Stream<List<Job>> jobStream();
   Stream jobStream();
   Stream<List<Job>> jobStreamList();
+  Future<void> deleteData();
 }
 
 class FirestoreDataBase implements DataBase {
@@ -37,6 +38,7 @@ class FirestoreDataBase implements DataBase {
   Future<void> createJob(Job job) async {
     await _setData(
       path: APIPath.job(uid: uid, jobId: documentIdFromCurrentData()),
+      // path: APIPath.job(uid: uid, jobId: 'job-id'),
       data: job.toMap(),
     );
   }
@@ -65,6 +67,7 @@ class FirestoreDataBase implements DataBase {
   //     ),
   //   );
   // }
+  @override
   Stream jobStream() {
     final path = APIPath.jobs(uid);
     final reference = FirebaseFirestore.instance.collection(path);
@@ -72,6 +75,7 @@ class FirestoreDataBase implements DataBase {
     return snapshots.map((snapshotData) => snapshotData.docs);
   }
 
+  @override
   Stream<List<Job>> jobStreamList() {
     final path = APIPath.jobs(uid);
     final reference = FirebaseFirestore.instance.collection(path);
@@ -84,5 +88,14 @@ class FirestoreDataBase implements DataBase {
         ),
       ),
     );
+  }
+
+  @override
+  // used to delete data from firebase
+  Future<void> deleteData() async {
+    final path = APIPath.job(uid: uid);
+    final reference = FirebaseFirestore.instance.doc(path);
+    print('Path : $path');
+    await reference.delete();
   }
 }

@@ -6,8 +6,14 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 
 class AppUser {
   final String uid;
+  final String photoUrl;
+  final String displayName;
 
-  AppUser({@required this.uid});
+  AppUser({
+    @required this.uid,
+    @required this.displayName,
+    this.photoUrl,
+  });
 }
 
 abstract class AuthBase {
@@ -28,7 +34,11 @@ class Auth implements AuthBase {
     if (user == null) {
       return null;
     } else {
-      return AppUser(uid: user.uid);
+      return AppUser(
+        uid: user.uid,
+        photoUrl: user.photoURL,
+        displayName: user.displayName,
+      );
     }
   }
 
